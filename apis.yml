@@ -1,0 +1,148 @@
+aid: doubleverify
+name: DoubleVerify
+description: >-
+  DoubleVerify (NYSE: DV) is a New York-based software platform for digital
+  media measurement, data, and analytics. The company's Media Effectiveness
+  Platform — branded DV MAP (Media AdVantage Platform) — verifies ad
+  impressions across the open web, social, connected TV, and commerce
+  networks, detecting fraud and invalid traffic (IVT), measuring viewability
+  and attention, scoring brand suitability and contextual relevance, and
+  attributing outcomes. The platform analyzes trillions of media
+  transactions per year for advertisers, publishers, supply-side platforms,
+  and ad marketplaces. Core products include DV Authentic Attention, DV
+  Custom Contextual (a semantic-science contextual targeting engine across
+  200k+ concepts), DV Authentic Brand Suitability, the DV Publisher Suite,
+  DV Marketplace Suite, and Scibids AI for AI-powered programmatic bidding.
+  DoubleVerify is MRC-accredited and integrates with the leading DSPs,
+  SSPs, social platforms (Meta, TikTok, YouTube, X, Snap, Pinterest,
+  Reddit, LinkedIn), CTV platforms, retail-media networks, and ad servers.
+  Customers and partners access measurement, contextual, and optimization
+  data primarily through DV Pinnacle — DoubleVerify's customer-facing
+  reporting and configuration platform — which exposes a Bearer-token
+  protected Data API for pulling reports, and through SDK and tag-based
+  integrations on supply and publisher endpoints. DoubleVerify does not
+  publish an open developer portal or an OpenAPI specification; developer
+  documentation at developer.doubleverify.com is gated, and API tokens are
+  provisioned per partner/program through Pinnacle.
+type: Index
+position: Provider
+access: 3rd-Party
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - Ad Verification
+  - Ad Measurement
+  - Media Quality
+  - Brand Suitability
+  - Viewability
+  - Attention Measurement
+  - Invalid Traffic
+  - Fraud Detection
+  - Contextual Targeting
+  - Programmatic Advertising
+  - Connected TV
+  - Social Media Measurement
+  - Commerce Media
+  - Publisher Analytics
+  - MRC Accredited
+  - AdTech
+url: https://raw.githubusercontent.com/api-evangelist/doubleverify/refs/heads/main/apis.yml
+created: '2026-05-25'
+modified: '2026-05-25'
+specificationVersion: '0.20'
+apis: []
+common:
+  - type: Website
+    url: https://doubleverify.com
+  - type: About
+    url: https://doubleverify.com/company/about
+  - type: Platform
+    url: https://doubleverify.com
+  - type: Pinnacle
+    url: https://pinnacle.doubleverify.com
+  - type: DeveloperPortal
+    url: https://developer.doubleverify.com
+  - type: KnowledgeHub
+    url: https://doubleverify.com/knowledge-hub
+  - type: Newsroom
+    url: https://doubleverify.com/company/newsroom
+  - type: InvestorRelations
+    url: https://ir.doubleverify.com
+  - type: Careers
+    url: https://doubleverify.com/company/careers
+  - type: Contact
+    url: https://doubleverify.com/contact-us
+  - type: GitHub
+    url: https://github.com/DoubleVerify
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/doubleverify
+  - type: Twitter
+    url: https://twitter.com/doubleverify
+  - type: YouTube
+    url: https://www.youtube.com/@DoubleVerifyInc
+  - type: Facebook
+    url: https://www.facebook.com/doubleverify
+solutions:
+  - name: DV Authentic Attention
+    description: >-
+      Privacy-friendly, MRC-accredited attention measurement that combines
+      exposure and engagement signals (including direct platform signals on
+      partners like TikTok) into a single Authentic Attention score for
+      optimizing creative and media performance.
+    url: https://doubleverify.com
+  - name: DV Authentic Brand Suitability
+    description: >-
+      Pre- and post-bid brand suitability and brand safety classification
+      across open web, social, and CTV, aligned with GARM and DV's own
+      taxonomy, with IAS-style avoidance and targeting controls.
+    url: https://doubleverify.com
+  - name: DV Custom Contextual
+    description: >-
+      Semantic-science contextual targeting and avoidance segments built on
+      DV's classification engine over 200,000+ concepts, including in-market,
+      seasonal, and event-based categories, distributed via DSPs and SSPs.
+    url: https://doubleverify.com
+  - name: DV Fraud and Invalid Traffic Protection
+    description: >-
+      Detection and blocking of general and sophisticated invalid traffic
+      (GIVT/SIVT), bot networks, app fraud, CTV fraud, and ad-stacking
+      schemes; MRC-accredited across multiple environments.
+    url: https://doubleverify.com
+  - name: DV Viewability
+    description: >-
+      MRC-accredited viewability measurement across display, video, mobile
+      web, in-app, and CTV, plus Open Measurement SDK (OMSDK) and tag-based
+      integrations with major platforms.
+    url: https://doubleverify.com
+  - name: DV Publisher Suite
+    description: >-
+      Publisher-side tools for revenue analytics, inventory quality, quality
+      targeting, and Authentic Direct, helping publishers monetize verified
+      supply and shore up programmatic yield.
+    url: https://doubleverify.com
+  - name: DV Marketplace Suite
+    description: >-
+      SSP and ad-marketplace solutions for inventory verification, supply-path
+      transparency, and advertiser confidence on the sell side.
+    url: https://doubleverify.com
+  - name: Scibids AI
+    description: >-
+      AI-powered programmatic bidding and campaign optimization engine
+      (acquired 2023) that plugs into DSPs to drive media-buying decisions
+      using custom KPIs and DV measurement signals.
+    url: https://doubleverify.com
+  - name: Rockerbox Attribution
+    description: >-
+      Marketing attribution, marketing mix modeling, and incrementality
+      testing capabilities (Rockerbox, acquired 2025) integrated into the
+      Prove pillar of the DV MAP platform.
+    url: https://doubleverify.com
+  - name: DV Pinnacle
+    description: >-
+      DoubleVerify's customer-facing reporting and configuration platform.
+      Pinnacle is where advertisers, agencies, and partners configure
+      campaigns, view verification and attention dashboards, generate Data
+      API Bearer tokens, and manage partner integrations.
+    url: https://pinnacle.doubleverify.com
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
