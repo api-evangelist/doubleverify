@@ -1,0 +1,887 @@
+# DoubleVerify GraphQL Schema
+# Conceptual schema derived from DoubleVerify REST API surface
+# Covers brand safety, viewability, fraud detection, attention measurement,
+# contextual targeting, publisher analytics, and campaign performance.
+
+# -------------------------------------------------------------------
+# Scalars
+# -------------------------------------------------------------------
+scalar DateTime
+scalar Date
+scalar JSON
+scalar Float64
+
+# -------------------------------------------------------------------
+# Enums
+# -------------------------------------------------------------------
+
+enum EnvironmentType {
+  DISPLAY
+  VIDEO
+  MOBILE_WEB
+  IN_APP
+  CTV
+  SOCIAL
+  COMMERCE_MEDIA
+}
+
+enum AdFormat {
+  BANNER
+  INTERSTITIAL
+  NATIVE
+  INSTREAM_VIDEO
+  OUTSTREAM_VIDEO
+  REWARDED_VIDEO
+  CAROUSEL
+  RICH_MEDIA
+}
+
+enum FraudCategory {
+  GIVT
+  SIVT
+  BOT_TRAFFIC
+  DATA_CENTER_TRAFFIC
+  AD_STACKING
+  PIXEL_STUFFING
+  HIDDEN_ADS
+  APP_FRAUD
+  CTV_FRAUD
+}
+
+enum BrandSafetyCategory {
+  ADULT_CONTENT
+  VIOLENCE
+  HATE_SPEECH
+  ILLEGAL_DOWNLOADS
+  ILLEGAL_DRUGS
+  TERRORISM
+  SPAM
+  SENSITIVE_TOPICS
+  SAFE
+}
+
+enum BrandSuitabilityCategory {
+  NEWS
+  POLITICS
+  CONTROVERSY
+  TRAGEDY
+  CELEBRITY_SCANDAL
+  MATURE_CONTENT
+  FAMILY_FRIENDLY
+  PREMIUM
+}
+
+enum ViewabilityStatus {
+  VIEWABLE
+  NON_VIEWABLE
+  UNDETERMINED
+}
+
+enum TrafficQuality {
+  AUTHENTIC
+  SUSPICIOUS
+  FRAUDULENT
+}
+
+enum ReportStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  EXPIRED
+}
+
+enum ReportGranularity {
+  HOURLY
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum CampaignStatus {
+  ACTIVE
+  PAUSED
+  ARCHIVED
+  DRAFT
+}
+
+enum SegmentStatus {
+  ACTIVE
+  INACTIVE
+  PENDING_APPROVAL
+}
+
+enum SegmentType {
+  BRAND_SAFETY
+  CONTEXTUAL
+  AUDIENCE
+  VIEWABILITY
+  FRAUD_PROTECTION
+  ATTENTION
+}
+
+enum ContextualCategory {
+  ARTS_AND_ENTERTAINMENT
+  AUTOMOTIVE
+  BEAUTY_AND_FITNESS
+  BOOKS_AND_LITERATURE
+  BUSINESS_AND_FINANCE
+  COMPUTERS_AND_ELECTRONICS
+  FOOD_AND_DRINK
+  GAMES
+  HEALTH
+  HOBBIES_AND_LEISURE
+  HOME_AND_GARDEN
+  INTERNET_AND_TELECOM
+  JOBS_AND_EDUCATION
+  LAW_AND_GOVERNMENT
+  NEWS
+  ONLINE_COMMUNITIES
+  PEOPLE_AND_SOCIETY
+  PETS_AND_ANIMALS
+  REAL_ESTATE
+  SCIENCE
+  SHOPPING
+  SPORTS
+  TRAVEL
+  WORLD_LOCALITIES
+}
+
+enum AttentionMetricType {
+  EXPOSURE_TIME
+  ENGAGEMENT_SCORE
+  AUTHENTIC_ATTENTION_SCORE
+  VIDEO_COMPLETION
+  CLICK_THROUGH_RATE
+  HOVER_TIME
+}
+
+enum Platform {
+  META
+  TIKTOK
+  YOUTUBE
+  TWITTER_X
+  SNAPCHAT
+  PINTEREST
+  REDDIT
+  LINKEDIN
+  OPEN_WEB
+  CTV
+  COMMERCE
+}
+
+enum InventoryType {
+  PROGRAMMATIC
+  DIRECT
+  PRIVATE_MARKETPLACE
+  OPEN_MARKETPLACE
+  PREFERRED_DEALS
+}
+
+enum PublisherVerificationStatus {
+  VERIFIED
+  UNVERIFIED
+  BLOCKED
+  PENDING
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+enum MetricDimension {
+  DATE
+  CAMPAIGN
+  ADVERTISER
+  PUBLISHER
+  PLACEMENT
+  CREATIVE
+  ENVIRONMENT
+  PLATFORM
+  GEO
+}
+
+# -------------------------------------------------------------------
+# Core Entity Types
+# -------------------------------------------------------------------
+
+type Advertiser {
+  id: ID!
+  name: String!
+  status: CampaignStatus!
+  industry: String
+  campaigns: [Campaign!]!
+  segments: [Segment!]!
+  settings: AdvertiserSettings
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AdvertiserSettings {
+  defaultBrandSafetyProfile: BrandSafetyProfile
+  defaultViewabilityThreshold: Float
+  defaultFraudProtection: Boolean!
+  attentionMeasurementEnabled: Boolean!
+}
+
+type Campaign {
+  id: ID!
+  name: String!
+  advertiserId: ID!
+  advertiser: Advertiser!
+  status: CampaignStatus!
+  startDate: Date!
+  endDate: Date
+  budget: Float
+  currency: String
+  placements: [Placement!]!
+  segments: [Segment!]!
+  brandSafetyProfile: BrandSafetyProfile
+  viewabilityTargets: ViewabilityTarget
+  metrics: CampaignMetrics
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Placement {
+  id: ID!
+  campaignId: ID!
+  campaign: Campaign!
+  name: String!
+  environment: EnvironmentType!
+  adFormat: AdFormat!
+  inventoryType: InventoryType!
+  publisherId: ID
+  publisher: Publisher
+  metrics: PlacementMetrics
+  verificationStatus: PublisherVerificationStatus!
+  createdAt: DateTime!
+}
+
+type Publisher {
+  id: ID!
+  name: String!
+  domain: String
+  appBundleId: String
+  verificationStatus: PublisherVerificationStatus!
+  environments: [EnvironmentType!]!
+  qualityScore: Float
+  fraudRate: Float
+  viewabilityRate: Float
+  placements: [Placement!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Segment {
+  id: ID!
+  name: String!
+  description: String
+  type: SegmentType!
+  status: SegmentStatus!
+  advertiserId: ID
+  advertiser: Advertiser
+  categories: [ContextualCategory!]!
+  brandSafetyCategories: [BrandSafetyCategory!]!
+  brandSuitabilityCategories: [BrandSuitabilityCategory!]!
+  platforms: [Platform!]!
+  environments: [EnvironmentType!]!
+  size: Int
+  cpmAdjustment: Float
+  expiresAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type BrandSafetyProfile {
+  id: ID!
+  name: String!
+  advertiserId: ID!
+  blockedCategories: [BrandSafetyCategory!]!
+  suitabilityCategories: [BrandSuitabilityCategory!]!
+  customKeywords: [String!]!
+  contentRatings: [String!]!
+  garmAligned: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ViewabilityTarget {
+  id: ID!
+  campaignId: ID!
+  displayThreshold: Float
+  videoThreshold: Float
+  ctvThreshold: Float
+  measurementVendor: String
+  mrcAccredited: Boolean!
+}
+
+type FraudDetectionReport {
+  id: ID!
+  campaignId: ID
+  advertiserId: ID
+  reportDate: Date!
+  totalImpressions: Int!
+  fraudImpressions: Int!
+  fraudRate: Float!
+  givtImpressions: Int!
+  sivtImpressions: Int!
+  categories: [FraudCategoryBreakdown!]!
+  topFraudulentDomains: [DomainFraudStats!]!
+  generatedAt: DateTime!
+}
+
+type FraudCategoryBreakdown {
+  category: FraudCategory!
+  impressions: Int!
+  rate: Float!
+}
+
+type DomainFraudStats {
+  domain: String!
+  impressions: Int!
+  fraudRate: Float!
+  categories: [FraudCategory!]!
+}
+
+type ViewabilityReport {
+  id: ID!
+  campaignId: ID
+  advertiserId: ID
+  reportDate: Date!
+  totalImpressions: Int!
+  measurableImpressions: Int!
+  viewableImpressions: Int!
+  viewabilityRate: Float!
+  inViewTime: Float
+  breakdownByEnvironment: [ViewabilityByEnvironment!]!
+  breakdownByFormat: [ViewabilityByFormat!]!
+  generatedAt: DateTime!
+}
+
+type ViewabilityByEnvironment {
+  environment: EnvironmentType!
+  impressions: Int!
+  viewableImpressions: Int!
+  viewabilityRate: Float!
+}
+
+type ViewabilityByFormat {
+  format: AdFormat!
+  impressions: Int!
+  viewableImpressions: Int!
+  viewabilityRate: Float!
+  averageInViewTime: Float
+}
+
+type AttentionReport {
+  id: ID!
+  campaignId: ID
+  advertiserId: ID
+  reportDate: Date!
+  authenticAttentionScore: Float!
+  exposureScore: Float!
+  engagementScore: Float!
+  metrics: [AttentionMetricBreakdown!]!
+  breakdownByPlatform: [AttentionByPlatform!]!
+  generatedAt: DateTime!
+}
+
+type AttentionMetricBreakdown {
+  metric: AttentionMetricType!
+  value: Float!
+  benchmark: Float
+  indexScore: Float
+}
+
+type AttentionByPlatform {
+  platform: Platform!
+  authenticAttentionScore: Float!
+  impressions: Int!
+}
+
+type CampaignMetrics {
+  campaignId: ID!
+  dateRange: DateRange!
+  totalImpressions: Int!
+  measurableImpressions: Int!
+  viewableImpressions: Int!
+  viewabilityRate: Float!
+  fraudImpressions: Int!
+  fraudRate: Float!
+  authenticImpressions: Int!
+  authenticRate: Float!
+  authenticAttentionScore: Float
+  brandSafetyRate: Float!
+  spend: Float
+  cpm: Float
+}
+
+type PlacementMetrics {
+  placementId: ID!
+  impressions: Int!
+  viewabilityRate: Float!
+  fraudRate: Float!
+  authenticRate: Float!
+  brandSafetyScore: Float
+}
+
+type DateRange {
+  startDate: Date!
+  endDate: Date!
+}
+
+type ContextualSegment {
+  id: ID!
+  name: String!
+  description: String
+  categories: [ContextualCategory!]!
+  concepts: [ContextualConcept!]!
+  languages: [String!]!
+  environments: [EnvironmentType!]!
+  estimatedReach: Int
+  status: SegmentStatus!
+  createdAt: DateTime!
+}
+
+type ContextualConcept {
+  id: ID!
+  name: String!
+  description: String
+  category: ContextualCategory!
+  relatedConcepts: [String!]!
+  reach: Int
+}
+
+type Report {
+  id: ID!
+  name: String!
+  status: ReportStatus!
+  type: String!
+  advertiserId: ID
+  campaignId: ID
+  dateRange: DateRange!
+  granularity: ReportGranularity!
+  dimensions: [MetricDimension!]!
+  downloadUrl: String
+  createdAt: DateTime!
+  completedAt: DateTime
+  expiresAt: DateTime
+}
+
+type Tag {
+  id: ID!
+  name: String!
+  advertiserId: ID!
+  campaignId: ID
+  placementId: ID
+  tagCode: String!
+  environments: [EnvironmentType!]!
+  featuresEnabled: [String!]!
+  createdAt: DateTime!
+}
+
+type Integration {
+  id: ID!
+  name: String!
+  platform: Platform!
+  type: String!
+  advertiserId: ID!
+  status: String!
+  configuration: JSON
+  lastSyncAt: DateTime
+  createdAt: DateTime!
+}
+
+type PublisherAnalytics {
+  publisherId: ID!
+  dateRange: DateRange!
+  totalImpressions: Int!
+  verifiedImpressions: Int!
+  fraudImpressions: Int!
+  viewableImpressions: Int!
+  viewabilityRate: Float!
+  fraudRate: Float!
+  revenueAtRisk: Float
+  qualityScore: Float!
+}
+
+type InventoryQuality {
+  id: ID!
+  publisherId: ID!
+  environment: EnvironmentType!
+  qualityScore: Float!
+  viewabilityRate: Float!
+  fraudRate: Float!
+  brandSafetyRate: Float!
+  verifiedAt: DateTime!
+}
+
+type APIToken {
+  id: ID!
+  name: String!
+  advertiserId: ID!
+  token: String
+  scopes: [String!]!
+  expiresAt: DateTime
+  createdAt: DateTime!
+  lastUsedAt: DateTime
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+  totalCount: Int!
+}
+
+# -------------------------------------------------------------------
+# Connection Types (Pagination)
+# -------------------------------------------------------------------
+
+type AdvertiserConnection {
+  edges: [AdvertiserEdge!]!
+  pageInfo: PageInfo!
+}
+
+type AdvertiserEdge {
+  node: Advertiser!
+  cursor: String!
+}
+
+type CampaignConnection {
+  edges: [CampaignEdge!]!
+  pageInfo: PageInfo!
+}
+
+type CampaignEdge {
+  node: Campaign!
+  cursor: String!
+}
+
+type SegmentConnection {
+  edges: [SegmentEdge!]!
+  pageInfo: PageInfo!
+}
+
+type SegmentEdge {
+  node: Segment!
+  cursor: String!
+}
+
+type PublisherConnection {
+  edges: [PublisherEdge!]!
+  pageInfo: PageInfo!
+}
+
+type PublisherEdge {
+  node: Publisher!
+  cursor: String!
+}
+
+type ReportConnection {
+  edges: [ReportEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ReportEdge {
+  node: Report!
+  cursor: String!
+}
+
+# -------------------------------------------------------------------
+# Input Types
+# -------------------------------------------------------------------
+
+input DateRangeInput {
+  startDate: Date!
+  endDate: Date!
+}
+
+input CreateAdvertiserInput {
+  name: String!
+  industry: String
+  defaultBrandSafetyProfileId: ID
+  attentionMeasurementEnabled: Boolean
+}
+
+input UpdateAdvertiserInput {
+  name: String
+  industry: String
+  defaultBrandSafetyProfileId: ID
+  attentionMeasurementEnabled: Boolean
+}
+
+input CreateCampaignInput {
+  name: String!
+  advertiserId: ID!
+  startDate: Date!
+  endDate: Date
+  budget: Float
+  currency: String
+  brandSafetyProfileId: ID
+  viewabilityTargets: ViewabilityTargetInput
+}
+
+input UpdateCampaignInput {
+  name: String
+  status: CampaignStatus
+  endDate: Date
+  budget: Float
+  brandSafetyProfileId: ID
+  viewabilityTargets: ViewabilityTargetInput
+}
+
+input ViewabilityTargetInput {
+  displayThreshold: Float
+  videoThreshold: Float
+  ctvThreshold: Float
+}
+
+input CreatePlacementInput {
+  campaignId: ID!
+  name: String!
+  environment: EnvironmentType!
+  adFormat: AdFormat!
+  inventoryType: InventoryType!
+  publisherId: ID
+}
+
+input CreateSegmentInput {
+  name: String!
+  description: String
+  type: SegmentType!
+  advertiserId: ID
+  categories: [ContextualCategory!]
+  brandSafetyCategories: [BrandSafetyCategory!]
+  brandSuitabilityCategories: [BrandSuitabilityCategory!]
+  platforms: [Platform!]
+  environments: [EnvironmentType!]
+}
+
+input UpdateSegmentInput {
+  name: String
+  description: String
+  status: SegmentStatus
+  categories: [ContextualCategory!]
+  brandSafetyCategories: [BrandSafetyCategory!]
+  platforms: [Platform!]
+  environments: [EnvironmentType!]
+}
+
+input CreateBrandSafetyProfileInput {
+  name: String!
+  advertiserId: ID!
+  blockedCategories: [BrandSafetyCategory!]!
+  suitabilityCategories: [BrandSuitabilityCategory!]
+  customKeywords: [String!]
+  garmAligned: Boolean
+}
+
+input UpdateBrandSafetyProfileInput {
+  name: String
+  blockedCategories: [BrandSafetyCategory!]
+  suitabilityCategories: [BrandSuitabilityCategory!]
+  customKeywords: [String!]
+  garmAligned: Boolean
+}
+
+input CreateReportInput {
+  name: String!
+  type: String!
+  advertiserId: ID
+  campaignId: ID
+  dateRange: DateRangeInput!
+  granularity: ReportGranularity!
+  dimensions: [MetricDimension!]!
+}
+
+input CreateTagInput {
+  name: String!
+  advertiserId: ID!
+  campaignId: ID
+  placementId: ID
+  environments: [EnvironmentType!]!
+  featuresEnabled: [String!]
+}
+
+input CreateIntegrationInput {
+  name: String!
+  platform: Platform!
+  type: String!
+  advertiserId: ID!
+  configuration: JSON
+}
+
+input AdvertiserFilterInput {
+  status: CampaignStatus
+  industry: String
+  search: String
+}
+
+input CampaignFilterInput {
+  advertiserId: ID
+  status: CampaignStatus
+  startDateAfter: Date
+  endDateBefore: Date
+  search: String
+}
+
+input SegmentFilterInput {
+  type: SegmentType
+  status: SegmentStatus
+  advertiserId: ID
+  platform: Platform
+  environment: EnvironmentType
+  search: String
+}
+
+input PublisherFilterInput {
+  verificationStatus: PublisherVerificationStatus
+  environment: EnvironmentType
+  minQualityScore: Float
+  search: String
+}
+
+input PaginationInput {
+  first: Int
+  after: String
+  last: Int
+  before: String
+}
+
+input SortInput {
+  field: String!
+  order: SortOrder!
+}
+
+# -------------------------------------------------------------------
+# Query Root
+# -------------------------------------------------------------------
+
+type Query {
+  # Advertiser queries
+  advertiser(id: ID!): Advertiser
+  advertisers(
+    filter: AdvertiserFilterInput
+    pagination: PaginationInput
+    sort: SortInput
+  ): AdvertiserConnection!
+
+  # Campaign queries
+  campaign(id: ID!): Campaign
+  campaigns(
+    filter: CampaignFilterInput
+    pagination: PaginationInput
+    sort: SortInput
+  ): CampaignConnection!
+
+  # Placement queries
+  placement(id: ID!): Placement
+  placementsByCampaign(campaignId: ID!): [Placement!]!
+
+  # Publisher queries
+  publisher(id: ID!): Publisher
+  publishers(
+    filter: PublisherFilterInput
+    pagination: PaginationInput
+    sort: SortInput
+  ): PublisherConnection!
+  publisherAnalytics(publisherId: ID!, dateRange: DateRangeInput!): PublisherAnalytics
+  publisherInventoryQuality(publisherId: ID!): [InventoryQuality!]!
+
+  # Segment queries
+  segment(id: ID!): Segment
+  segments(
+    filter: SegmentFilterInput
+    pagination: PaginationInput
+    sort: SortInput
+  ): SegmentConnection!
+  contextualSegments(categories: [ContextualCategory!], environments: [EnvironmentType!]): [ContextualSegment!]!
+  contextualConcept(id: ID!): ContextualConcept
+  contextualConcepts(category: ContextualCategory, search: String): [ContextualConcept!]!
+
+  # Brand safety queries
+  brandSafetyProfile(id: ID!): BrandSafetyProfile
+  brandSafetyProfiles(advertiserId: ID!): [BrandSafetyProfile!]!
+
+  # Measurement and analytics queries
+  campaignMetrics(campaignId: ID!, dateRange: DateRangeInput!): CampaignMetrics
+  fraudDetectionReport(campaignId: ID, advertiserId: ID, dateRange: DateRangeInput!): FraudDetectionReport
+  viewabilityReport(campaignId: ID, advertiserId: ID, dateRange: DateRangeInput!): ViewabilityReport
+  attentionReport(campaignId: ID, advertiserId: ID, dateRange: DateRangeInput!): AttentionReport
+
+  # Report queries
+  report(id: ID!): Report
+  reports(
+    advertiserId: ID
+    pagination: PaginationInput
+  ): ReportConnection!
+
+  # Tag queries
+  tag(id: ID!): Tag
+  tagsByAdvertiser(advertiserId: ID!): [Tag!]!
+
+  # Integration queries
+  integration(id: ID!): Integration
+  integrations(advertiserId: ID!): [Integration!]!
+
+  # API token queries
+  apiTokens(advertiserId: ID!): [APIToken!]!
+}
+
+# -------------------------------------------------------------------
+# Mutation Root
+# -------------------------------------------------------------------
+
+type Mutation {
+  # Advertiser mutations
+  createAdvertiser(input: CreateAdvertiserInput!): Advertiser!
+  updateAdvertiser(id: ID!, input: UpdateAdvertiserInput!): Advertiser!
+  deleteAdvertiser(id: ID!): Boolean!
+
+  # Campaign mutations
+  createCampaign(input: CreateCampaignInput!): Campaign!
+  updateCampaign(id: ID!, input: UpdateCampaignInput!): Campaign!
+  pauseCampaign(id: ID!): Campaign!
+  resumeCampaign(id: ID!): Campaign!
+  archiveCampaign(id: ID!): Campaign!
+
+  # Placement mutations
+  createPlacement(input: CreatePlacementInput!): Placement!
+  deletePlacement(id: ID!): Boolean!
+
+  # Segment mutations
+  createSegment(input: CreateSegmentInput!): Segment!
+  updateSegment(id: ID!, input: UpdateSegmentInput!): Segment!
+  deleteSegment(id: ID!): Boolean!
+  activateSegment(id: ID!): Segment!
+  deactivateSegment(id: ID!): Segment!
+
+  # Brand safety mutations
+  createBrandSafetyProfile(input: CreateBrandSafetyProfileInput!): BrandSafetyProfile!
+  updateBrandSafetyProfile(id: ID!, input: UpdateBrandSafetyProfileInput!): BrandSafetyProfile!
+  deleteBrandSafetyProfile(id: ID!): Boolean!
+  applyBrandSafetyProfileToCampaign(profileId: ID!, campaignId: ID!): Campaign!
+
+  # Report mutations
+  createReport(input: CreateReportInput!): Report!
+  deleteReport(id: ID!): Boolean!
+
+  # Tag mutations
+  createTag(input: CreateTagInput!): Tag!
+  deleteTag(id: ID!): Boolean!
+  regenerateTag(id: ID!): Tag!
+
+  # Integration mutations
+  createIntegration(input: CreateIntegrationInput!): Integration!
+  updateIntegration(id: ID!, configuration: JSON!): Integration!
+  deleteIntegration(id: ID!): Boolean!
+  syncIntegration(id: ID!): Integration!
+
+  # API token mutations
+  createAPIToken(advertiserId: ID!, name: String!, scopes: [String!]!, expiresAt: DateTime): APIToken!
+  revokeAPIToken(id: ID!): Boolean!
+}
