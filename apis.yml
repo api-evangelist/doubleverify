@@ -47,6 +47,10 @@ modified: '2026-05-25'
 specificationVersion: '0.20'
 apis: []
 common:
+- type: TrustCenter
+  url: security/doubleverify-trust-center.yml
+- type: DomainSecurity
+  url: security/doubleverify-domain-security.yml
 - type: Website
   url: https://doubleverify.com
 - type: About
@@ -79,6 +83,8 @@ common:
   url: https://www.facebook.com/doubleverify
 - url: graphql/doubleverify-graphql.md
   type: GraphQL
+- type: Blog
+  url: https://doubleverify.com/blog/rss.xml
 solutions:
 - name: DV Authentic Attention
   description: Privacy-friendly, MRC-accredited attention measurement that combines
