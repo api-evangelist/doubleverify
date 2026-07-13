@@ -1,0 +1,13 @@
+{
+  "repo": "doubleverify",
+  "feeds": [
+    {
+      "source": "https://doubleverify.com/blog/",
+      "feed_url": "https://doubleverify.com/blog/rss.xml",
+      "title": "Blog",
+      "saved": 5
+    }
+  ],
+  "fetched": "2026-07-11T11:43:46Z",
+  "post_count": 23
+}
