@@ -19,7 +19,11 @@ description: 'DoubleVerify (NYSE: DV) is a New York-based software platform for 
   SDK and tag-based integrations on supply and publisher endpoints. DoubleVerify does
   not publish an open developer portal or an OpenAPI specification; developer documentation
   at developer.doubleverify.com is gated, and API tokens are provisioned per partner/program
-  through Pinnacle.'
+  through Pinnacle. As of the DV Neura launch DoubleVerify also runs a live remote Model
+  Context Protocol server at https://mcp.doubleverify.com/mcp — the DV Neura Insight Agent
+  — authenticated with OAuth 2.1 against its Keycloak CIAM realm and connectable today from
+  Anthropic Claude, which makes DoubleVerify one of the few ad-verification vendors running
+  a real agent surface even though it still ships no public machine-readable contract.'
 type: Index
 accessModel:
   pricing: unknown
@@ -54,9 +58,55 @@ tags:
 - AdTech
 url: https://raw.githubusercontent.com/api-evangelist/doubleverify/refs/heads/main/apis.yml
 created: '2026-05-25'
-modified: '2026-05-25'
+modified: '2026-08-13'
 specificationVersion: '0.20'
-apis: []
+apis:
+- name: DV Neura MCP Server
+  description: >-
+    A live remote Model Context Protocol endpoint that exposes DoubleVerify's media
+    quality, verification and performance data to an AI assistant as the DV Neura Insight
+    Agent. DoubleVerify states that clients can connect from Anthropic Claude today, with
+    Google Gemini and Microsoft Copilot to follow. The endpoint is authenticated with an
+    OAuth 2.1 bearer token issued by DoubleVerify's CIAM Keycloak realm
+    (dv-ciam.doubleverify.com/realms/pinnacle) with the scopes openid, email and profile,
+    so a DV Pinnacle account is required. An unauthenticated tools/list returns HTTP 401,
+    which means the tool manifest and every tool inputSchema are gated; DoubleVerify
+    publishes no OpenAPI and no public tool list, so no tools are recorded.
+  humanURL: https://doubleverify.com/products/neura
+  baseURL: https://mcp.doubleverify.com/mcp
+  tags:
+  - MCP
+  - Agent
+  - Media Measurement
+  properties:
+  - type: MCPServer
+    url: mcp/doubleverify-mcp.yml
+  - type: Authentication
+    url: authentication/doubleverify-authentication.yml
+  - type: OAuthScopes
+    url: scopes/doubleverify-scopes.yml
+- name: DV Report Data API
+  description: >-
+    DoubleVerify's asynchronous reporting API. A caller submits a data request, receives an
+    ID, and retrieves the result as a CSV stream once the data is available; the request ID
+    stays valid for 30 days. Access tokens are minted by the user inside DV Pinnacle under
+    Analytics then Data API. Known routed paths are /requests, /requestTypes, /compatibility
+    and /dataloadtime, each of which returns HTTP 401 to an unauthenticated caller while the
+    host root serves an anonymous health-check document. The reference documentation is
+    behind a login at developer.doubleverify.com, and no OpenAPI is published.
+  humanURL: https://developer.doubleverify.com/docs/client-integrations/extensions/report-data-api
+  baseURL: https://data-reporting.doubleverify.com
+  tags:
+  - Reporting
+  - Analytics
+  - Media Measurement
+  properties:
+  - type: Authentication
+    url: authentication/doubleverify-authentication.yml
+  - type: Conventions
+    url: conventions/doubleverify-conventions.yml
+  - type: RateLimits
+    url: rate-limits/doubleverify-rate-limits.yml
 common:
 - type: TrustCenter
   url: security/doubleverify-trust-center.yml
@@ -81,7 +131,15 @@ common:
 - type: Careers
   url: https://doubleverify.com/company/careers
 - type: Contact
-  url: https://doubleverify.com/contact-us
+  url: https://doubleverify.com/lp/contact
+- type: Support
+  url: https://doubleverify.com/lp/contact
+- type: TermsOfService
+  url: https://doubleverify.com/terms-and-conditions
+- type: PrivacyPolicy
+  url: https://doubleverify.com/privacy-notice
+- type: GitHubOrganization
+  url: https://github.com/DoubleVerify
 - type: GitHub
   url: https://github.com/DoubleVerify
 - type: LinkedIn
@@ -92,10 +150,36 @@ common:
   url: https://www.youtube.com/@DoubleVerifyInc
 - type: Facebook
   url: https://www.facebook.com/doubleverify
-- url: graphql/doubleverify-graphql.md
-  type: GraphQL
 - type: Blog
   url: https://doubleverify.com/blog/rss.xml
+- type: MCPServer
+  url: mcp/doubleverify-mcp.yml
+- type: Authentication
+  url: authentication/doubleverify-authentication.yml
+- type: OAuthScopes
+  url: scopes/doubleverify-scopes.yml
+- type: Conventions
+  url: conventions/doubleverify-conventions.yml
+- type: Conformance
+  url: conformance/doubleverify-conformance.yml
+- type: Compliance
+  url: https://trust.doubleverify.com/
+- type: Lifecycle
+  url: lifecycle/doubleverify-lifecycle.yml
+- type: StatusPage
+  url: https://status.doubleverify.com
+- type: WellKnown
+  url: well-known/doubleverify-well-known.yml
+- type: Packages
+  url: packages/doubleverify-packages.yml
+- type: LLMsTxt
+  url: llms/doubleverify-llms.txt
+- type: VulnerabilityDisclosure
+  url: security/doubleverify-vulnerability-disclosure.yml
+- type: Plans
+  url: plans/doubleverify-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/doubleverify-rate-limits.yml
 solutions:
 - name: DV Authentic Attention
   description: Privacy-friendly, MRC-accredited attention measurement that combines
@@ -151,3 +235,31 @@ solutions:
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 15
+  pass: local-v1
+x-coverage:
+  state: covered
+  reason: null
+  detail: >-
+    DoubleVerify still publishes no machine-readable contract — developer.doubleverify.com
+    redirects to /docs/login and no OpenAPI, AsyncAPI, GraphQL SDL or agent card exists on
+    any host — but this pass found a real, live agent surface behind it: a remote MCP server
+    at https://mcp.doubleverify.com/mcp that answers an unauthenticated tools/list with a
+    401 OAuth challenge and serves RFC 9728 and RFC 8414 discovery documents anonymously,
+    plus the Report Data API host https://data-reporting.doubleverify.com. The profile is
+    no longer thin.
+  evidence:
+  - url: https://mcp.doubleverify.com/mcp
+    status: 401
+  - url: https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp
+    status: 200
+  - url: https://dv-ciam.doubleverify.com/realms/pinnacle/.well-known/openid-configuration
+    status: 200
+  - url: https://data-reporting.doubleverify.com/requests
+    status: 401
+  - url: https://developer.doubleverify.com/docs
+    status: 200
+  checked: '2026-08-13'
