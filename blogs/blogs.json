@@ -2,12 +2,20 @@
   "repo": "doubleverify",
   "feeds": [
     {
-      "source": "https://doubleverify.com/blog/",
+      "source": "https://doubleverify.com/blog/rss.xml",
       "feed_url": "https://doubleverify.com/blog/rss.xml",
-      "title": "Blog",
-      "saved": 2
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
+      "source": "https://www.facebook.com/doubleverify",
+      "feed_url": "https://www.facebook.com/doubleverify",
+      "title": "",
+      "saved": 0,
+      "method": "none"
     }
   ],
-  "fetched": "2026-08-06T13:56:59Z",
-  "post_count": 27
+  "fetched": "2026-08-15T12:22:01Z",
+  "post_count": 29
 }
