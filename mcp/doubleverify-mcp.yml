@@ -1,0 +1,81 @@
+generated: '2026-08-13'
+method: probed
+status: published
+source: https://mcp.doubleverify.com/mcp
+docs: https://doubleverify.com/products/neura
+announcement: https://doubleverify.com/company/newsroom/doubleverify-introduces-dv-neura-the-dynamic-ai-engine-powering-the-future-of-media-quality-and-effectiveness
+
+deployment:
+  mode: remote
+  endpoint: https://mcp.doubleverify.com/mcp
+  auth: oauth
+  verified: probed
+
+server:
+  name: DV Neura MCP Server
+  product: DV Neura Insight Agent
+  transport: http
+  url: https://mcp.doubleverify.com/mcp
+  vendor_documented: true
+  note: >-
+    DoubleVerify's DV Neura announcement states that clients can connect to the DV Neura
+    Insight Agent from Anthropic Claude today over the Model Context Protocol, with
+    Google Gemini and Microsoft Copilot to follow. The endpoint recorded here was found
+    by resolving mcp.doubleverify.com and probing it — DoubleVerify's public marketing
+    pages describe the MCP capability but do not print the URL, so the URL itself is a
+    probe result, not a quoted value.
+
+authorization:
+  scheme: OAuth 2.1 bearer
+  challenge: >-
+    WWW-Authenticate: Bearer error="invalid_token",
+    error_description="The access token is missing or invalid",
+    resource_metadata="https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp",
+    scope="openid email profile"
+  protected_resource_metadata: https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp
+  authorization_server: https://dv-ciam.doubleverify.com/realms/pinnacle
+  scopes_required:
+  - openid
+  - email
+  - profile
+  identity_provider: Keycloak (DV CIAM), realm "pinnacle"
+  account_requirement: A DV Pinnacle account. The MCP realm is the same CIAM realm that
+    fronts pinnacle.doubleverify.com.
+
+tools:
+  count: null
+  status: gated
+  note: >-
+    NOT ENUMERATED. POST {"jsonrpc":"2.0","id":1,"method":"tools/list"} to
+    https://mcp.doubleverify.com/mcp returns HTTP 401 with an OAuth challenge, as does
+    "initialize". The live tool manifest and every tool inputSchema require an
+    authenticated Pinnacle token, so no tool list is recorded here. DoubleVerify
+    publishes no llms.txt and no public tool documentation to fall back on, so the tool
+    surface is genuinely unknown rather than derived. Nothing is invented.
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+  - url: https://mcp.doubleverify.com/mcp
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+    http_status: 401
+    www_authenticate: Bearer error="invalid_token", resource_metadata="https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp",
+      scope="openid email profile"
+  - url: https://mcp.doubleverify.com/mcp
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"initialize"}'
+    http_status: 401
+  - url: https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp
+    method: GET
+    http_status: 200
+    content_type: application/json
+  - url: https://mcp.doubleverify.com/.well-known/oauth-authorization-server/mcp
+    method: GET
+    http_status: 200
+    content_type: application/json
+  - url: https://mcp.doubleverify.com/
+    method: GET
+    http_status: 404
+  dns:
+    mcp.doubleverify.com: 34.148.56.16

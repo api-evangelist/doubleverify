@@ -1,0 +1,135 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  Live probes of https://data-reporting.doubleverify.com and https://mcp.doubleverify.com,
+  the DV CIAM OIDC discovery document, and integrator documentation published by Improvado
+  and the Alli platform that quotes DoubleVerify's own Data API client documentation
+note: >-
+  DERIVED FROM NO OPENAPI. DoubleVerify publishes no machine-readable contract, so this is
+  assembled from what is observable on the wire plus what integrators quote from
+  DoubleVerify's gated client documentation. Every field that could not be established is
+  recorded as unknown rather than guessed.
+
+surfaces:
+- name: DV Report Data API
+  base: https://data-reporting.doubleverify.com
+  style: REST over HTTPS
+  known_paths:
+  - /requests
+  - /requestTypes
+  - /compatibility
+  - /dataloadtime
+  path_source: >-
+    Corroborated from the community n8n node n8n-nodes-doubleverify and confirmed live —
+    each path returns 401 (routed and auth-gated) while unrouted paths such as
+    /swagger.json return 404.
+- name: DV Neura MCP Server
+  base: https://mcp.doubleverify.com/mcp
+  style: Model Context Protocol (JSON-RPC 2.0 over Streamable HTTP)
+
+authentication:
+  style: >-
+    Two distinct models. The Report Data API takes a bearer token minted by the user in DV
+    Pinnacle (Analytics -> Data API -> Create Token). The DV Neura MCP server takes an
+    OAuth 2.1 access token from the DV CIAM Keycloak realm
+    https://dv-ciam.doubleverify.com/realms/pinnacle with scopes openid, email and profile.
+  detail: authentication/doubleverify-authentication.yml
+  scopes: scopes/doubleverify-scopes.yml
+
+idempotency:
+  supported: unknown
+  header: null
+  scope: null
+  retention: null
+  note: >-
+    NOT DOCUMENTED and not observable. No Idempotency-Key header is advertised on any
+    public surface and there is no spec to read one from. No `Idempotency` pointer is
+    emitted for this provider — the pipeline must not claim an idempotency contract that
+    DoubleVerify has not published.
+
+pagination:
+  style: unknown
+  params: []
+  response_fields: []
+  note: Not documented publicly.
+
+async_pattern:
+  supported: true
+  shape: request-then-retrieve
+  description: >-
+    The Report Data API is an asynchronous reporting API rather than a synchronous query
+    API. A caller submits a data request, receives an ID, and retrieves the result once the
+    data is available.
+  result_id_validity: 30 days from the time the data for that request becomes available
+  source: DoubleVerify Data API client documentation as quoted by integrator docs
+    (https://help.alliplatform.com/data/Working-version/doubleverify)
+
+content_negotiation:
+  request_accept: text/csv
+  response: >-
+    A CSV stream. The Accept header must be set to text/csv for data retrieval; the response
+    may be compressed according to the Accept-Encoding header.
+  source: DoubleVerify Data API client documentation as quoted by integrator docs
+  note: >-
+    This is unusual and worth flagging for agent consumers — the primary DoubleVerify data
+    surface returns CSV, not JSON, so an agent cannot assume a JSON envelope.
+
+metadata:
+  supported: unknown
+
+request_tracing:
+  header: unknown
+  note: No request-id header observed on unauthenticated responses.
+
+versioning:
+  scheme: unknown
+  note: >-
+    Known Report Data API paths carry no version segment. See
+    lifecycle/doubleverify-lifecycle.yml.
+
+error_envelope:
+  shape: unknown
+  problem_json: false
+  note: >-
+    Unauthenticated errors are bare status codes with zero-length bodies — 401 on every
+    Report Data API path. No error catalogue is published, so no errors/ artifact is
+    emitted for this provider.
+  detail: null
+
+rate_limit_signalling:
+  headers: []
+  note: None observed. See rate-limits/doubleverify-rate-limits.yml.
+
+health:
+  endpoint: https://data-reporting.doubleverify.com/
+  shape: '{"status":"Healthy","totalDuration":"...","entries":{}}'
+  auth_required: false
+  note: >-
+    The Report Data API root serves an unauthenticated ASP.NET Core health-check document.
+    It is the only anonymous response on the host.
+
+cross_links:
+  authentication: authentication/doubleverify-authentication.yml
+  scopes: scopes/doubleverify-scopes.yml
+  lifecycle: lifecycle/doubleverify-lifecycle.yml
+  rate_limits: rate-limits/doubleverify-rate-limits.yml
+  conformance: conformance/doubleverify-conformance.yml
+  mcp: mcp/doubleverify-mcp.yml
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+  - url: https://data-reporting.doubleverify.com/
+    http_status: 200
+  - url: https://data-reporting.doubleverify.com/requests
+    http_status: 401
+  - url: https://data-reporting.doubleverify.com/requestTypes
+    http_status: 401
+  - url: https://data-reporting.doubleverify.com/compatibility
+    http_status: 401
+  - url: https://data-reporting.doubleverify.com/dataloadtime
+    http_status: 401
+  - url: https://data-reporting.doubleverify.com/openapi.json
+    http_status: 401
+  - url: https://data-reporting.doubleverify.com/swagger.json
+    http_status: 404

@@ -1,0 +1,1 @@
+{"resource":"https://mcp.doubleverify.com/mcp","authorization_servers":["https://dv-ciam.doubleverify.com/realms/pinnacle"],"bearer_methods_supported":["header"],"scopes_supported":["openid","email","profile"]}

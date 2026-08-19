@@ -1,0 +1,61 @@
+generated: '2026-08-13'
+method: probed
+source: https://status.doubleverify.com/api/v2/components.json
+note: >-
+  DoubleVerify publishes an Atlassian Statuspage. It does not publish a versioning policy,
+  a deprecation policy, a Sunset/Deprecation header commitment or a public SLA — the
+  developer portal that would carry them is behind a login. Absences below are recorded,
+  not inferred.
+
+status_page: https://status.doubleverify.com
+status_page_vendor: Atlassian Statuspage
+status_page_api:
+  summary: https://status.doubleverify.com/api/v2/status.json
+  components: https://status.doubleverify.com/api/v2/components.json
+  machine_readable: true
+status_observed:
+  fetched: '2026-08-13'
+  indicator: none
+  description: All Systems Operational
+components:
+- name: DV Pinnacle
+  status: operational
+  start_date: '2024-01-01'
+- name: SciBids
+  status: operational
+  start_date: '2023-12-01'
+- name: DV Rockerbox
+  status: operational
+  start_date: '2026-01-01'
+
+versioning:
+  scheme: unknown
+  current: null
+  docs: null
+  note: >-
+    The DV Report Data API host serves paths without a version segment
+    (/requests, /requestTypes, /compatibility, /dataloadtime). No versioning policy is
+    published outside the gated portal.
+
+deprecation:
+  policy_url: null
+  sunset_header: unknown
+  note: No deprecation or sunset policy found on any public DoubleVerify surface.
+
+sla:
+  url: null
+  uptime_target: null
+  note: No public SLA. Availability commitments are contractual, per the enterprise sales
+    motion.
+
+deprecated_operations: []
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+  - url: https://status.doubleverify.com/
+    http_status: 200
+  - url: https://status.doubleverify.com/api/v2/status.json
+    http_status: 200
+  - url: https://status.doubleverify.com/api/v2/components.json
+    http_status: 200

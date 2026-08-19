@@ -1,0 +1,39 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  Live probes of https://data-reporting.doubleverify.com and https://mcp.doubleverify.com,
+  plus a search of every public DoubleVerify and integrator documentation surface
+limit_count: 0
+limits: []
+headers: []
+retry_after: unknown
+status_on_exhaustion: unknown
+note: >-
+  DoubleVerify publishes no rate limits. The developer portal that would document them
+  (developer.doubleverify.com) redirects to a login, and neither API host returns a
+  rate-limit header to an unauthenticated caller: the Report Data API answers a bare 401
+  with a zero-length body and no RateLimit-*, X-RateLimit-* or Retry-After header, and the
+  MCP endpoint answers 401 with only a WWW-Authenticate challenge. The one runtime pacing
+  constraint that IS public comes from integrator documentation rather than DoubleVerify:
+  a Report Data API request ID stays valid for 30 days from the time its data is available,
+  which bounds retrieval but is a retention window, not a rate limit. Recorded as an honest
+  zero.
+
+observed_response_headers:
+- url: https://data-reporting.doubleverify.com/requests
+  status: 401
+  rate_limit_headers: []
+- url: https://mcp.doubleverify.com/mcp
+  status: 401
+  rate_limit_headers: []
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+  - url: https://data-reporting.doubleverify.com/requests
+    http_status: 401
+  - url: https://mcp.doubleverify.com/mcp
+    http_status: 401
+  - url: https://developer.doubleverify.com/docs
+    http_status: 200
+    note: redirects to /docs/login?return_to=%2Fdocs

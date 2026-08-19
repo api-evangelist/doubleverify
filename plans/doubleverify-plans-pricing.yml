@@ -1,0 +1,26 @@
+generated: '2026-08-13'
+method: searched
+source: https://doubleverify.com/
+plan_count: 0
+plans: []
+pricing_model: enterprise-contact-sales
+currency: null
+free_tier: false
+self_service_signup: false
+note: >-
+  DoubleVerify publishes no pricing. There is no /pricing page (404), no plans page and no
+  price on any product page; every product page terminates in a "Get Started" contact form
+  at https://doubleverify.com/lp/contact. Access to the Report Data API and to the DV Neura
+  MCP server both require an existing DV Pinnacle account, which is provisioned through a
+  commercial agreement — there is no self-service tier and no published rate card. This is
+  a measured zero, not a gap in the search.
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+  - url: https://doubleverify.com/pricing
+    http_status: 404
+  - url: https://doubleverify.com/lp/contact
+    http_status: 200
+  - url: https://doubleverify.com/products/neura
+    http_status: 200

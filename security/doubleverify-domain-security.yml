@@ -1,23 +1,33 @@
-generated: '2026-07-11'
+generated: '2026-08-13'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
 - host: doubleverify.com
   https: true
   tls_version: TLSv1.3
-  cert_expires: Sep  6 11:43:12 2026 GMT
+  cert_expires: Nov  4 11:11:05 2026 GMT
   hsts: true
   hsts_max_age: 31536000
+- host: mcp.doubleverify.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 26 14:39:47 2026 GMT
+  hsts: null
+- host: developer.doubleverify.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 18 13:10:47 2026 GMT
+  hsts: false
 domains:
 - domain: doubleverify.com
   dnssec: false
   caa:
-  - 0 issuewild "pki.apple.com"
-  - 0 issuewild "digicert.com"
-  - 0 issue "digicert.com"
-  - 0 iodef "mailto:sre@doubleverify.com"
   - 0 issuewild "letsencrypt.org"
+  - 0 issuewild "digicert.com"
   - 0 issuewild "amazon.com"
+  - 0 issue "pki.goog"
+  - 0 issuewild "pki.goog"
+  - 0 issuewild "microsoft.com"
   spf: true
   dmarc: true
   dmarc_policy: quarantine

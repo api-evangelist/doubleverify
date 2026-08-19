@@ -1,0 +1,137 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  Live probes of https://mcp.doubleverify.com/mcp (401 + WWW-Authenticate),
+  https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp (200),
+  https://dv-ciam.doubleverify.com/realms/pinnacle/.well-known/openid-configuration (200),
+  and https://data-reporting.doubleverify.com/* (401)
+docs: https://developer.doubleverify.com/docs/client-integrations/extensions/report-data-api
+note: >-
+  DERIVED FROM NO OPENAPI. DoubleVerify publishes no OpenAPI, so this profile is not a
+  securitySchemes rollup — it is built from the OAuth/OIDC discovery documents the
+  provider actually serves plus the live 401 challenges on its two API hosts.
+
+summary:
+  types:
+  - oauth2
+  - openIdConnect
+  - http
+  api_key_in: []
+  oauth2_flows:
+  - authorizationCode
+  - clientCredentials
+  - deviceCode
+  - refreshToken
+  identity_provider: Keycloak (DV CIAM)
+  realm: https://dv-ciam.doubleverify.com/realms/pinnacle
+  account_gate: Every DoubleVerify API surface requires a DV Pinnacle account. There is
+    no self-service signup and no anonymous tier.
+
+schemes:
+- name: dv-neura-mcp-oauth
+  type: oauth2
+  applies_to: DV Neura MCP Server (https://mcp.doubleverify.com/mcp)
+  bearer_methods_supported:
+  - header
+  scopes_required:
+  - openid
+  - email
+  - profile
+  protected_resource_metadata: https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp
+  authorization_server: https://dv-ciam.doubleverify.com/realms/pinnacle
+  source: probed
+  rfc:
+  - RFC 9728 (OAuth 2.0 Protected Resource Metadata)
+  - RFC 6750 (Bearer token usage)
+
+- name: dv-ciam-openid-connect
+  type: openIdConnect
+  applies_to: DV Pinnacle / DV Neura CIAM realm
+  openIdConnectUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/.well-known/openid-configuration
+  issuer: https://dv-ciam.doubleverify.com/realms/pinnacle
+  authorizationUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/auth
+  tokenUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/token
+  userinfoUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/userinfo
+  jwksUri: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/certs
+  introspectionUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/token/introspect
+  revocationUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/revoke
+  deviceAuthorizationUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/auth/device
+  endSessionUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/logout
+  registrationEndpoint: https://dv-ciam.doubleverify.com/realms/pinnacle/clients-registrations/openid-connect
+  grant_types_supported:
+  - authorization_code
+  - client_credentials
+  - implicit
+  - password
+  - refresh_token
+  - urn:ietf:params:oauth:grant-type:device_code
+  - urn:ietf:params:oauth:grant-type:jwt-bearer
+  - urn:ietf:params:oauth:grant-type:token-exchange
+  - urn:ietf:params:oauth:grant-type:uma-ticket
+  - urn:openid:params:grant-type:ciba
+  token_endpoint_auth_methods_supported:
+  - private_key_jwt
+  - client_secret_basic
+  - client_secret_post
+  - tls_client_auth
+  - client_secret_jwt
+  code_challenge_methods_supported:
+  - plain
+  - S256
+  id_token_signing_alg_values_supported:
+  - RS256
+  - RS384
+  - RS512
+  - PS256
+  - PS384
+  - PS512
+  - ES256
+  - ES384
+  - ES512
+  - EdDSA
+  - HS256
+  - HS384
+  - HS512
+  source: probed
+  file: well-known/doubleverify-openid-configuration.json
+
+- name: dv-report-data-api-bearer
+  type: http
+  scheme: bearer
+  applies_to: DV Report Data API (https://data-reporting.doubleverify.com)
+  in: header
+  parameter: Authorization
+  token_issuance: >-
+    Self-service inside DV Pinnacle: Analytics -> Data API -> Create Token, or select an
+    existing token. The token value is used as a bearer token; integrator documentation
+    notes the value is supplied WITHOUT the literal word "Bearer" in some connector UIs.
+  token_contact: dataapi@doubleverify.com
+  source: searched
+  evidence:
+  - https://improvado.io/docs/doubleverify
+  - https://help.alliplatform.com/data/Working-version/doubleverify
+  - probe https://data-reporting.doubleverify.com/requests -> 401
+
+observed_challenges:
+- url: https://mcp.doubleverify.com/mcp
+  status: 401
+  www_authenticate: Bearer error="invalid_token", error_description="The access token
+    is missing or invalid", resource_metadata="https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp",
+    scope="openid email profile"
+- url: https://data-reporting.doubleverify.com/requests
+  status: 401
+  www_authenticate: null
+  note: Bare 401 with no WWW-Authenticate header and a zero-length body — the Report Data
+    API does not advertise its auth scheme to an unauthenticated caller.
+- url: https://developer.doubleverify.com/docs
+  status: 200
+  note: Redirects to /docs/login?return_to=%2Fdocs — the developer documentation portal
+    itself is behind a login.
+
+gaps:
+- No securitySchemes can be verified against a machine-readable contract; DoubleVerify
+  publishes no OpenAPI.
+- The Report Data API returns no WWW-Authenticate header, so an agent cannot discover how
+  to authenticate from the wire.
+- Token lifetime, rotation and revocation policy for Report Data API tokens are documented
+  only inside the gated developer portal.

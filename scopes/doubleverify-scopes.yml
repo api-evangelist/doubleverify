@@ -1,0 +1,123 @@
+generated: '2026-08-13'
+method: probed
+source: https://dv-ciam.doubleverify.com/realms/pinnacle/.well-known/openid-configuration
+also_source: https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp
+docs: null
+note: >-
+  DoubleVerify publishes no scopes reference page — developer.doubleverify.com is behind a
+  login. Every scope below is read verbatim from the `scopes_supported` array of the two
+  discovery documents the provider serves anonymously. Descriptions marked
+  `description_source: inferred` are our reading of the scope NAME and the realm it lives
+  in, not text DoubleVerify published; they are labelled so they are never mistaken for a
+  provider claim. No scope has been invented.
+
+schemes:
+- name: dv-ciam-pinnacle
+  type: openIdConnect
+  issuer: https://dv-ciam.doubleverify.com/realms/pinnacle
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/auth
+    tokenUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/token
+  - flow: clientCredentials
+    tokenUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/token
+  - flow: deviceCode
+    deviceAuthorizationUrl: https://dv-ciam.doubleverify.com/realms/pinnacle/protocol/openid-connect/auth/device
+
+resources:
+- resource: https://mcp.doubleverify.com/mcp
+  scopes_required:
+  - openid
+  - email
+  - profile
+  source: RFC 9728 protected-resource metadata
+
+scopes:
+- scope: openid
+  description: Standard OIDC scope; requests an ID token.
+  description_source: oidc-standard
+  required_by:
+  - https://mcp.doubleverify.com/mcp
+- scope: email
+  description: Standard OIDC scope; releases the email and email_verified claims.
+  description_source: oidc-standard
+  required_by:
+  - https://mcp.doubleverify.com/mcp
+- scope: profile
+  description: Standard OIDC scope; releases basic profile claims.
+  description_source: oidc-standard
+  required_by:
+  - https://mcp.doubleverify.com/mcp
+- scope: address
+  description: Standard OIDC scope; releases the address claim.
+  description_source: oidc-standard
+- scope: phone
+  description: Standard OIDC scope; releases phone_number claims.
+  description_source: oidc-standard
+- scope: offline_access
+  description: Standard OIDC scope; requests a refresh token for offline use.
+  description_source: oidc-standard
+- scope: roles
+  description: Keycloak built-in; adds realm and client role mappings to the token.
+  description_source: keycloak-builtin
+- scope: roles-limited
+  description: A narrowed variant of the roles mapper.
+  description_source: inferred
+- scope: web-origins
+  description: Keycloak built-in; adds allowed CORS web origins to the token.
+  description_source: keycloak-builtin
+- scope: microprofile-jwt
+  description: Keycloak built-in; emits MicroProfile JWT claims (upn, groups).
+  description_source: keycloak-builtin
+- scope: acr
+  description: Keycloak built-in; authentication context class reference.
+  description_source: keycloak-builtin
+- scope: amr
+  description: Keycloak built-in; authentication methods references.
+  description_source: keycloak-builtin
+- scope: basic
+  description: Keycloak built-in; core token claims (sub, auth_time).
+  description_source: keycloak-builtin
+- scope: service_account
+  description: Keycloak built-in; marks a client-credentials service-account token.
+  description_source: keycloak-builtin
+- scope: dv-agent-mcp-aud
+  description: DoubleVerify-specific audience scope for the DV Neura MCP agent surface.
+    Its presence in the Pinnacle realm is the realm-side counterpart of the MCP server at
+    mcp.doubleverify.com.
+  description_source: inferred
+  vendor_specific: true
+- scope: dv-agent-mcp-internal-aud
+  description: DoubleVerify-specific audience scope for an internal DV Neura MCP surface,
+    distinct from the client-facing one above.
+  description_source: inferred
+  vendor_specific: true
+- scope: dv-apis-aud
+  description: DoubleVerify-specific audience scope for DV's API estate.
+  description_source: inferred
+  vendor_specific: true
+- scope: dv-attributes
+  description: DoubleVerify-specific scope releasing DV account/entitlement attributes
+    into the token.
+  description_source: inferred
+  vendor_specific: true
+- scope: ums-aud
+  description: DoubleVerify-specific audience scope for a user-management service.
+  description_source: inferred
+  vendor_specific: true
+- scope: salesforce-id
+  description: DoubleVerify-specific scope releasing the linked Salesforce account
+    identifier.
+  description_source: inferred
+  vendor_specific: true
+- scope: impersonation
+  description: Keycloak token-exchange impersonation scope.
+  description_source: keycloak-builtin
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+  - url: https://dv-ciam.doubleverify.com/realms/pinnacle/.well-known/openid-configuration
+    http_status: 200
+  - url: https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp
+    http_status: 200

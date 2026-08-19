@@ -1,0 +1,129 @@
+generated: '2026-08-13'
+method: probed
+source: live HTTP probes of every DoubleVerify host named in apis.yml plus the hosts
+  discovered in this pass (mcp.doubleverify.com, data-reporting.doubleverify.com,
+  dv-ciam.doubleverify.com)
+summary:
+  hosts_probed: 7
+  paths_probed: 33
+  documents_found: 3
+  note: >-
+    Three real /.well-known documents are served, and all three belong to the DV Neura
+    MCP surface: the RFC 9728 OAuth protected-resource metadata for
+    https://mcp.doubleverify.com/mcp, the RFC 8414 authorization-server metadata it
+    points at, and the OpenID Connect discovery document for the Keycloak realm
+    (dv-ciam.doubleverify.com/realms/pinnacle) that guards it. No security.txt, no
+    api-catalog, no ai-plugin.json and no agent card is served on any DoubleVerify host.
+hosts:
+- host: https://mcp.doubleverify.com
+  documents:
+  - path: /.well-known/oauth-protected-resource/mcp
+    status: 200
+    content_type: application/json
+    file: doubleverify-oauth-protected-resource.json
+    note: RFC 9728. Advertised by the WWW-Authenticate header on a 401 from /mcp.
+  - path: /.well-known/oauth-authorization-server/mcp
+    status: 200
+    content_type: application/json
+    file: doubleverify-oauth-authorization-server.json
+    note: RFC 8414 metadata for the Keycloak realm https://dv-ciam.doubleverify.com/realms/pinnacle
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://dv-ciam.doubleverify.com
+  documents:
+  - path: /realms/pinnacle/.well-known/openid-configuration
+    status: 200
+    content_type: application/json
+    file: doubleverify-openid-configuration.json
+    note: OpenID Connect discovery for the Pinnacle CIAM realm (Keycloak).
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+- host: https://doubleverify.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://data-reporting.doubleverify.com
+  note: >-
+    Every path on this host except / returns 401, including the /.well-known/* paths.
+    The wall is a blanket authentication filter in front of the whole application, not
+    a statement that these documents exist; nothing here counts as a served document.
+  documents:
+  - path: /.well-known/security.txt
+    status: 401
+  - path: /.well-known/openid-configuration
+    status: 401
+  - path: /.well-known/oauth-authorization-server
+    status: 401
+  - path: /.well-known/api-catalog
+    status: 401
+  - path: /.well-known/agent-card.json
+    status: 401
+  - path: /.well-known/agent.json
+    status: 401
+- host: https://developer.doubleverify.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://pinnacle.doubleverify.com
+  note: Single-page application behind auth; every path answers 401 with an HTML body.
+  documents:
+  - path: /.well-known/security.txt
+    status: 401
+  - path: /.well-known/agent-card.json
+    status: 401
+  - path: /.well-known/agent.json
+    status: 401
+- host: https://status.doubleverify.com
+  note: >-
+    NOT DOUBLEVERIFY'S. This host is a CNAME onto Atlassian Statuspage
+    (45dyqxbvftz0.stspg-customer.com) and the 200 at /.well-known/security.txt is
+    Atlassian's own signed file — Canonical is
+    https://www.atlassian.com/.well-known/security.txt and Contact is
+    security@atlassian.com. It is recorded here as a MISS so a later pass does not
+    mistake a vendor's security.txt for DoubleVerify's.
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    belongs_to: Atlassian (Statuspage), not DoubleVerify
+    counted: false
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://trust.doubleverify.com
+  note: SafeBase-hosted trust portal (doubleverify.portals.safebase.io).
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404

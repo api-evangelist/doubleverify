@@ -1,0 +1,133 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  Live probes of the DV Neura MCP server, its RFC 9728/RFC 8414 discovery documents, the
+  DV CIAM Keycloak realm's OIDC configuration, and the DoubleVerify SafeBase trust centre
+note: >-
+  DoubleVerify publishes no OpenAPI, so nothing here is derived from a spec. Each entry is
+  either observed on the wire or read from a document the provider serves.
+
+standards:
+- id: oauth2
+  conforms: true
+  evidence: >-
+    https://mcp.doubleverify.com/mcp answers 401 with a WWW-Authenticate Bearer challenge;
+    the DV CIAM realm exposes authorization, token, introspection and revocation endpoints.
+- id: oidc
+  conforms: true
+  evidence: OpenID Connect discovery served at
+    https://dv-ciam.doubleverify.com/realms/pinnacle/.well-known/openid-configuration (200)
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: true
+  evidence: https://mcp.doubleverify.com/.well-known/oauth-authorization-server/mcp -> 200
+    application/json
+- id: rfc9728-oauth-protected-resource-metadata
+  conforms: true
+  evidence: https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp -> 200,
+    and the 401 on /mcp advertises it via the resource_metadata parameter
+- id: rfc6750-bearer-token
+  conforms: true
+  evidence: bearer_methods_supported ["header"] in the protected-resource metadata
+- id: rfc7636-pkce
+  conforms: true
+  evidence: code_challenge_methods_supported ["plain","S256"] in the OIDC discovery document
+- id: rfc7591-dynamic-client-registration
+  conforms: true
+  evidence: registration_endpoint
+    https://dv-ciam.doubleverify.com/realms/pinnacle/clients-registrations/openid-connect
+- id: rfc8628-device-authorization-grant
+  conforms: true
+  evidence: device_authorization_endpoint present; urn:ietf:params:oauth:grant-type:device_code
+    in grant_types_supported
+- id: rfc8693-token-exchange
+  conforms: true
+  evidence: urn:ietf:params:oauth:grant-type:token-exchange in grant_types_supported
+- id: rfc8705-mtls-client-authentication
+  conforms: true
+  evidence: tls_client_auth in token_endpoint_auth_methods_supported
+- id: mcp
+  conforms: true
+  evidence: >-
+    https://mcp.doubleverify.com/mcp is a live Model Context Protocol endpoint (401 to an
+    unauthenticated tools/list, MCP-shaped CORS allow-headers "mcp-protocol-version"), and
+    DoubleVerify's DV Neura announcement names MCP explicitly.
+- id: adcp-ad-context-protocol
+  conforms: unverified
+  evidence: >-
+    DoubleVerify's own DV Neura page lists "ADCP support" under its Open Connectivity
+    pillar. No AdCP endpoint or manifest was found on any DoubleVerify host, so the claim
+    is recorded as the provider's, not as an observed capability.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on doubleverify.com,
+    developer.doubleverify.com and trust.doubleverify.com. The only 200 is on
+    status.doubleverify.com and it is Atlassian's file, not DoubleVerify's.
+- id: rfc9457-problem-details
+  conforms: unknown
+  evidence: No public error contract. data-reporting.doubleverify.com returns bare 401s
+    with zero-length bodies.
+- id: a2a
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json return 404 on every
+    DoubleVerify host probed.
+- id: graphql
+  conforms: false
+  evidence: >-
+    No GraphQL endpoint exists. An introspection POST returns 404 on
+    pinnacle.doubleverify.com/graphql and mcp.doubleverify.com/graphql, 403 on
+    doubleverify.com/graphql, and 401 (blanket auth wall, not a GraphQL route) on
+    data-reporting.doubleverify.com/graphql.
+  retraction: >-
+    A prior enrichment round left graphql/doubleverify-schema.graphql in this repository —
+    887 lines of GraphQL SDL whose own header read "Conceptual schema derived from
+    DoubleVerify REST API surface" — together with graphql/doubleverify-graphql.md and a
+    `type: GraphQL` pointer in apis.yml. It was fabricated: DoubleVerify has no GraphQL
+    endpoint, and there is no DoubleVerify REST specification to have derived it from. Both
+    files and the apis.yml pointer were REMOVED on 2026-08-13.
+- id: openapi
+  conforms: false
+  evidence: No OpenAPI or Swagger document found on any host; see x-coverage in apis.yml.
+- id: asyncapi
+  conforms: false
+  evidence: No published event, streaming or webhook surface found.
+
+compliance:
+  published: true
+  source: https://trust.doubleverify.com/
+  certifications:
+  - SOC 2
+  - ISO/IEC 27001
+  - ISO/IEC 27701
+  - GDPR
+  - CCPA
+  - CPRA
+  - LGPD
+  - PIPEDA
+  - VCDPA
+  - EU-US Data Privacy Framework
+  - Swiss-US Data Privacy Framework
+  - UK Extension to the EU-US Data Privacy Framework
+  - APEC CBPR
+  - APEC PRP
+  - TRUSTe
+  accreditation:
+  - MRC (Media Rating Council) accreditation across viewability, IVT/fraud and attention
+    measurement — DoubleVerify's core product claim.
+  note: Certificates and the underlying reports are gated behind SafeBase registration;
+    the certification list itself is public on the trust centre landing page.
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+  - url: https://mcp.doubleverify.com/mcp
+    http_status: 401
+  - url: https://mcp.doubleverify.com/.well-known/oauth-protected-resource/mcp
+    http_status: 200
+  - url: https://mcp.doubleverify.com/.well-known/oauth-authorization-server/mcp
+    http_status: 200
+  - url: https://dv-ciam.doubleverify.com/realms/pinnacle/.well-known/openid-configuration
+    http_status: 200
+  - url: https://trust.doubleverify.com/
+    http_status: 200
+  - url: https://doubleverify.com/.well-known/security.txt
+    http_status: 404
