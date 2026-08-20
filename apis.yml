@@ -76,6 +76,10 @@ apis:
   baseURL: https://mcp.doubleverify.com/mcp
   tags:
   - MCP
+  - Agents
+  - Media Measurement
+  tags_raw:
+  - MCP
   - Agent
   - Media Measurement
   properties:
