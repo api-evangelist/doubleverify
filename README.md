@@ -1,4 +1,4 @@
-# doubleverify
+# DoubleVerify
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,4 +64,120 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-DoubleVerify (NYSE: DV) — ad verification, media measurement, and AI-driven optimization across open web, social, CTV, and commerce media. No public OpenAPI; the Pinnacle Data API and developer portal sit behind partner auth.
+DoubleVerify (NYSE: DV) is a New York-based software platform for digital media measurement, data, and analytics. The company's Media Effectiveness Platform — branded DV MAP (Media AdVantage Platform) — verifies ad impressions across the open web, social, connected TV, and commerce networks, detecting fraud and invalid traffic (IVT), measuring viewability and attention, scoring brand suitability and contextual relevance, and attributing outcomes. The platform analyzes trillions of media transactions per year for advertisers, publishers, supply-side platforms, and ad marketplaces. Core products include DV Authentic Attention, DV Custom Contextual (a semantic-science contextual targeting engine across 200k+ concepts), DV Authentic Brand Suitability, the DV Publisher Suite, DV Marketplace Suite, and Scibids AI for AI-powered programmatic bidding. DoubleVerify is MRC-accredited and integrates with the leading DSPs, SSPs, social platforms (Meta, TikTok, YouTube, X, Snap, Pinterest, Reddit, LinkedIn), CTV platforms, retail-media networks, and ad servers. Customers and partners access measurement, contextual, and optimization data primarily through DV Pinnacle — DoubleVerify's customer-facing reporting and configuration platform — which exposes a Bearer-token protected Data API for pulling reports, and through SDK and tag-based integrations on supply and publisher endpoints. DoubleVerify does not publish an open developer portal or an OpenAPI specification; developer documentation at developer.doubleverify.com is gated, and API tokens are provisioned per partner/program through Pinnacle. As of the DV Neura launch DoubleVerify also runs a live remote Model Context Protocol server at https://mcp.doubleverify.com/mcp — the DV Neura Insight Agent — authenticated with OAuth 2.1 against its Keycloak CIAM realm and connectable today from Anthropic Claude, which makes DoubleVerify one of the few ad-verification vendors running a real agent surface even though it still ships no public machine-readable contract.
+
+**Areas:** Ad Verification · Ad Measurement · Media Quality · Brand Suitability · Viewability · Attention Measurement · Invalid Traffic · Fraud Prevention · Contextual Targeting · Programmatic Advertising · Connected TV · Social Media Measurement
+
+## DoubleVerify on APIs.io
+
+Everything profiled for DoubleVerify is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/doubleverify/](https://apis.io/providers/doubleverify/)** — or go straight to one of the APIs or properties below.
+
+### APIs (2)
+
+- [DV Neura MCP Server](https://apis.io/apis/doubleverify/dv-neura-mcp-server/) — A live remote Model Context Protocol endpoint that exposes DoubleVerify's media quality, verification and performance data to an AI assistant as the DV…
+- [DV Report Data API](https://apis.io/apis/doubleverify/dv-report-data-api/) — DoubleVerify's asynchronous reporting API. A caller submits a data request, receives an ID, and retrieves the result as a CSV stream once the data is…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [DV Neura MCP Server](https://apis.io/servers/doubleverify/dv-neura-mcp-server/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Doubleverify Authentication](https://apis.io/security/doubleverify/doubleverify-authentication/)
+- [Doubleverify Domain Security](https://apis.io/security/doubleverify/doubleverify-domain-security/)
+- [Doubleverify Trust Center](https://apis.io/security/doubleverify/doubleverify-trust-center/)
+- [Doubleverify Vulnerability Disclosure](https://apis.io/security/doubleverify/doubleverify-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Doubleverify Scopes](https://apis.io/scopes/doubleverify/doubleverify-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Doubleverify Plans Pricing](https://apis.io/plans/doubleverify/doubleverify-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Doubleverify Rate Limits](https://apis.io/rate-limits/doubleverify/doubleverify-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://doubleverify.com)
+- [Support](https://doubleverify.com/lp/contact)
+- [Blog](https://doubleverify.com/blog/rss.xml)
+- [Compliance](https://trust.doubleverify.com/)
+- [Terms of service](https://doubleverify.com/terms-and-conditions)
+- [Privacy policy](https://doubleverify.com/privacy-notice)
+- [GitHub](https://github.com/DoubleVerify)
+- [Status](https://status.doubleverify.com)
+
+## API Evangelist rating
+
+**Kin Score 30.4** — thin · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 69.2 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 28.9 |
+| Developer ergonomics | 28.6 |
+| Access clarity | 36.8 |
+
+**Agent readiness 29.9** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 45.1** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/doubleverify/](https://apis.io/providers/doubleverify/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for DoubleVerify: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/doubleverify/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
